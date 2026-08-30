@@ -25,6 +25,26 @@ pub enum AppMode {
     Addon,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum AudienceFilter {
+    #[default]
+    All,
+    Universal,
+    Family,
+    Anime,
+}
+
+impl AudienceFilter {
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::All => "🌟 All",
+            Self::Universal => "🌐 Universal",
+            Self::Family => "🎈 All-Ages (Family)",
+            Self::Anime => "⛩️ Pan-Asian Anime",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InputMode {
     Normal,
@@ -49,6 +69,8 @@ pub struct AppState {
     pub search_suggestions: Vec<String>,
     pub suggest_index: Option<usize>,
     pub search_results: Vec<SearchResult>,
+    pub title_trie: crate::trie::TitleTrie<SearchResult>,
+    pub audience_filter: AudienceFilter,
     pub search_error: Option<String>,
     pub is_homepage_mode: bool,
     pub current_tab_id: String,
@@ -197,6 +219,8 @@ impl Default for AppState {
             search_suggestions: Vec::new(),
             suggest_index: None,
             search_results: Vec::new(),
+            title_trie: crate::trie::TitleTrie::new(),
+            audience_filter: AudienceFilter::default(),
             search_error: None,
             is_homepage_mode: false,
             current_tab_id: String::new(),

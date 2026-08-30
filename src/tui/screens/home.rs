@@ -457,6 +457,11 @@ pub fn draw(frame: &mut Frame, area: Rect, state: &mut AppState, theme: &Theme) 
 
         let util_spans = vec![
             Span::styled("[", theme.text_dim),
+            Span::styled("/ai", theme.shortcut),
+            Span::styled("] ", theme.text_dim),
+            Span::styled("AI Search", theme.text_dim),
+            Span::raw("     "),
+            Span::styled("[", theme.text_dim),
             Span::styled("?", theme.shortcut),
             Span::styled("] ", theme.text_dim),
             Span::styled("Help", theme.text_dim),

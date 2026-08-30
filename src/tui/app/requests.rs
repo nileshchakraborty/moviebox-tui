@@ -458,26 +458,42 @@ impl App {
                     self.prefetch_visible_posters();
                 }
 
-                if page <= 1 {
-                    self.prepare_image_refresh();
+                for item in &self.state.search_results {
+                    self.state.title_trie.insert(&item.id, &item.title, item.clone());
                 }
 
-                self.state.set_status(
-                    if self.state.search_results.is_empty() {
-                        format!(
-                            "No matches for '{}' on {}. Press Ctrl+P to try another provider.",
-                            query,
-                            context.provider.label()
-                        )
+                if self.state.search_results.is_empty() {
+                    let fuzzy_matches = self.state.title_trie.search(&query, 10);
+                    if !fuzzy_matches.is_empty() {
+                        self.state.search_results = fuzzy_matches.into_iter().map(|(item, _)| item).collect();
+                        self.state.set_status(
+                            format!(
+                                "No exact match for '{}'. Showing {} fuzzy/typo matches.",
+                                query,
+                                self.state.search_results.len()
+                            ),
+                            180,
+                        );
                     } else {
+                        self.state.set_status(
+                            format!(
+                                "No matches for '{}' on {}. Press Ctrl+P to switch provider or /ai for plot search.",
+                                query,
+                                context.provider.label()
+                            ),
+                            150,
+                        );
+                    }
+                } else {
+                    self.state.set_status(
                         format!(
                             "Found {} results on {}.",
                             self.state.search_results.len(),
                             context.provider.label()
-                        )
-                    },
-                    150,
-                );
+                        ),
+                        150,
+                    );
+                }
                 if page <= 1 {
                     if let Some(res) = self.state.search_results.first() {
                         self.state.search_list_state.select(Some(0));

@@ -508,6 +508,9 @@ impl App {
                     }
                 }
             }
+            Action::Notify(kind, title, msg) => {
+                self.state.notify(kind, title, msg);
+            }
             _ => return None,
         }
         None

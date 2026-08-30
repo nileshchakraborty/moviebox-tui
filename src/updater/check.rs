@@ -1,9 +1,14 @@
 use super::artifact::{Release, ReleaseAsset};
 
-const OWNER: &str = "mesamirh";
-const REPOSITORY: &str = "MovieBox-Tui";
+const OWNER: &str = "nileshchakraborty";
+const REPOSITORY: &str = "moviebox-tui";
 
 pub async fn check_release(current: &str) -> Result<Option<Release>, String> {
+    if std::env::var("MOVIEBOX_NO_UPDATE").is_ok()
+        || std::env::var("MOVIEBOX_UPDATE_DISABLED").is_ok()
+    {
+        return Ok(None);
+    }
     let release = match fetch_release().await {
         Ok(release) => release,
         Err(error) => {

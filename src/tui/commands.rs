@@ -20,6 +20,7 @@ pub enum SlashCommand {
     DisableTv,
     EnableAddons,
     DisableAddons,
+    Ai,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -42,10 +43,11 @@ pub enum ParsedCommand<'a> {
     DisableTv,
     EnableAddons,
     DisableAddons,
+    Ai(&'a str),
 }
 
 impl SlashCommand {
-    pub const ALL: [Self; 18] = [
+    pub const ALL: [Self; 19] = [
         Self::Browse,
         Self::History,
         Self::List,
@@ -64,6 +66,7 @@ impl SlashCommand {
         Self::DisableTv,
         Self::EnableAddons,
         Self::DisableAddons,
+        Self::Ai,
     ];
 
     pub fn name(self) -> &'static str {
@@ -86,6 +89,7 @@ impl SlashCommand {
             Self::DisableTv => "/disable-tv",
             Self::EnableAddons => "/enable-addons",
             Self::DisableAddons => "/disable-addons",
+            Self::Ai => "/ai",
         }
     }
 
@@ -115,6 +119,7 @@ impl SlashCommand {
             Self::DisableTv => "Disable TV mode navigation",
             Self::EnableAddons => "Enable Addon mode navigation",
             Self::DisableAddons => "Disable Addon mode navigation",
+            Self::Ai => "AI semantic plot discovery (Ollama/Web RAG)",
         }
     }
 
@@ -156,7 +161,8 @@ impl SlashCommand {
             | Self::Update
             | Self::ToggleUpdate
             | Self::ClearCache
-            | Self::Github => true,
+            | Self::Github
+            | Self::Ai => true,
         }
     }
 
@@ -236,6 +242,7 @@ impl SlashCommand {
             "/disable-tv" => Some(ParsedCommand::DisableTv),
             "/enable-addons" => Some(ParsedCommand::EnableAddons),
             "/disable-addons" => Some(ParsedCommand::DisableAddons),
+            "/ai" => Some(ParsedCommand::Ai(arg)),
             _ => None,
         }
     }

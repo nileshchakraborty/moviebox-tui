@@ -99,7 +99,7 @@ impl App {
                         self.action_sender.send(Action::StartSelfUpdate).ok();
                     } else if col < layout.open_btn_end_x {
                         let url =
-                            format!("https://github.com/mesamirh/MovieBox-Tui/releases/tag/v{ver}");
+                            format!("https://github.com/nileshchakraborty/moviebox-tui/releases/tag/v{ver}");
                         let _ = open::that(&url);
                     }
                     self.state.update_available = None;

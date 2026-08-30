@@ -82,7 +82,7 @@ impl App {
                 }
                 KeyCode::Char('o') | KeyCode::Char('O') => {
                     let url = format!(
-                        "https://github.com/mesamirh/MovieBox-Tui/releases/tag/v{}",
+                        "https://github.com/nileshchakraborty/moviebox-tui/releases/tag/v{}",
                         version
                     );
                     let _ = open::that(&url);

@@ -5,21 +5,21 @@ class MovieboxTui < Formula
   LINUX_ARM64_SHA256 = "d58f88a0a6e5cb34e8150fb0a01776ba16ce0d238a46bd85f3865d728fb2e0bb"
 
   desc "Stream movies, shows, anime, and live TV from your terminal"
-  homepage "https://github.com/mesamirh/MovieBox-Tui"
+  homepage "https://github.com/nileshchakraborty/moviebox-tui"
   version VERSION
   license any_of: ["MIT", "Apache-2.0"]
 
   on_macos do
-    url "https://github.com/mesamirh/MovieBox-Tui/releases/download/v#{VERSION}/MovieBox_macOS_Universal.tar.gz"
+    url "https://github.com/nileshchakraborty/moviebox-tui/releases/download/v#{VERSION}/MovieBox_macOS_Universal.tar.gz"
     sha256 MACOS_SHA256
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/mesamirh/MovieBox-Tui/releases/download/v#{VERSION}/MovieBox_Linux_arm64.tar.gz"
+      url "https://github.com/nileshchakraborty/moviebox-tui/releases/download/v#{VERSION}/MovieBox_Linux_arm64.tar.gz"
       sha256 LINUX_ARM64_SHA256
     else
-      url "https://github.com/mesamirh/MovieBox-Tui/releases/download/v#{VERSION}/MovieBox_Linux_x64.tar.gz"
+      url "https://github.com/nileshchakraborty/moviebox-tui/releases/download/v#{VERSION}/MovieBox_Linux_x64.tar.gz"
       sha256 LINUX_X64_SHA256
     end
   end

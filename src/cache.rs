@@ -453,3 +453,26 @@ pub fn get_captions_cache(subject_id: &str, resource_id: &str) -> Option<serde_j
 pub fn set_captions_cache(subject_id: &str, resource_id: &str, data: &serde_json::Value) {
     write_json_cache(&get_captions_path(subject_id, resource_id), data);
 }
+
+const SOURCE_FAILOVER_CACHE_EXPIRY_SECS: u64 = 7 * 24 * 60 * 60; // 7 days
+
+pub fn get_source_failover_path(provider: ProviderKind, subject_id: &str) -> PathBuf {
+    let mut path = get_provider_cache_dir(provider, "failover");
+    let hashed = hash_key(&format!("{}_{}", provider.cache_key(), subject_id));
+    path.push(format!("failover_{hashed}.json"));
+    path
+}
+
+pub fn get_working_source_cache(provider: ProviderKind, subject_id: &str) -> Option<String> {
+    read_json_cache(
+        &get_source_failover_path(provider, subject_id),
+        SOURCE_FAILOVER_CACHE_EXPIRY_SECS,
+    )
+    .and_then(|v| v.as_str().map(|s| s.to_string()))
+}
+
+pub fn set_working_source_cache(provider: ProviderKind, subject_id: &str, working_source: &str) {
+    let val = serde_json::Value::String(working_source.to_string());
+    write_json_cache(&get_source_failover_path(provider, subject_id), &val);
+}
+

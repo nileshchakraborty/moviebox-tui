@@ -1,3 +1,4 @@
+pub mod ai;
 pub mod cache;
 pub mod config;
 pub mod download;
@@ -7,5 +8,6 @@ pub mod models;
 pub mod player;
 pub mod providers;
 pub mod service;
+pub mod trie;
 pub mod tui;
 pub mod updater;

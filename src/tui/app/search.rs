@@ -135,7 +135,7 @@ impl App {
                 Some(true)
             }
             crate::tui::commands::ParsedCommand::Github => {
-                let _ = open::that("https://github.com/mesamirh/MovieBox-Tui");
+                let _ = open::that("https://github.com/nileshchakraborty/moviebox-tui");
                 self.state.search_query.clear();
                 self.state.input_mode = InputMode::Normal;
                 Some(true)
@@ -554,6 +554,75 @@ impl App {
                         self.action_sender.send(Action::ToggleTvMode).ok();
                     }
                 }
+                Some(true)
+            }
+            crate::tui::commands::ParsedCommand::Ai(arg) => {
+                let prompt = arg.trim().to_string();
+                self.state.search_query.clear();
+                self.state.input_mode = InputMode::Normal;
+
+                if prompt.is_empty() {
+                    self.state.notify(
+                        NotificationKind::Info,
+                        "AI Semantic Search",
+                        "Usage: /ai <plot or description>\nExample: /ai time traveler tries to save his wife",
+                    );
+                    return Some(true);
+                }
+
+                self.state.is_loading = true;
+                self.state.set_status(
+                    format!("Querying AI semantic matcher for '{}'...", prompt),
+                    250,
+                );
+
+                let tx = self.action_sender.clone();
+                tokio::spawn(async move {
+                    match crate::ai::semantic_search(&prompt).await {
+                        Ok(candidates) if !candidates.is_empty() => {
+                            let top_match = candidates[0].title.clone();
+                            let summary = candidates
+                                .iter()
+                                .take(3)
+                                .map(|c| {
+                                    if let Some(y) = &c.year {
+                                        format!("• {} ({})", c.title, y)
+                                    } else {
+                                        format!("• {}", c.title)
+                                    }
+                                })
+                                .collect::<Vec<_>>()
+                                .join("\n");
+
+                            tx.send(Action::Notify(
+                                NotificationKind::Success,
+                                "AI Match Found".to_string(),
+                                format!("Plot matched:\n{summary}\n\nSearching catalog for '{top_match}'..."),
+                            )).ok();
+
+                            // Dispatch search with the matched title
+                            tx.send(Action::Search {
+                                query: top_match,
+                                force_refresh: false,
+                            }).ok();
+                        }
+                        Ok(_) => {
+                            tx.send(Action::Notify(
+                                NotificationKind::Warning,
+                                "AI Search".to_string(),
+                                "No media titles found matching that description.".to_string(),
+                            )).ok();
+                        }
+                        Err(err) => {
+                            tx.send(Action::Notify(
+                                NotificationKind::Error,
+                                "AI Search Error".to_string(),
+                                format!("{err}\n(Make sure Ollama is running or internet is available)"),
+                            )).ok();
+                        }
+                    }
+                });
+
                 Some(true)
             }
         }

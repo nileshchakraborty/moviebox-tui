@@ -17,7 +17,7 @@ Set-StrictMode -Version Latest
 
 $AppName = "MovieBox-Tui"
 $BinName = "moviebox-tui.exe"
-$Repo = "mesamirh/MovieBox-Tui"
+$Repo = "nileshchakraborty/moviebox-tui"
 $DefaultInstallDir = Join-Path $env:LOCALAPPDATA "Programs\MovieBox-Tui\bin"
 
 if ($Help) {

@@ -155,7 +155,8 @@ impl App {
             | Action::UpdateAvailable(..)
             | Action::StartSelfUpdate
             | Action::SelfUpdateProgress(..)
-            | Action::SelfUpdateComplete(..) => {
+            | Action::SelfUpdateComplete(..)
+            | Action::Notify(..) => {
                 self.handle_system(action).await;
             }
 

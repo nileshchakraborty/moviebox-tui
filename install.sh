@@ -3,7 +3,7 @@ set -euo pipefail
 
 APP_NAME="MovieBox-Tui"
 BIN_NAME="moviebox-tui"
-REPO="mesamirh/MovieBox-Tui"
+REPO="nileshchakraborty/moviebox-tui"
 DEFAULT_INSTALL_DIR="$HOME/.local/bin"
 
 VERSION=""
