@@ -503,10 +503,20 @@ pub fn stream_item_to_release(
     season: usize,
     episode: usize,
 ) -> Option<Release> {
-    let url = stream.url.as_ref()?.trim();
-    if !crate::tui::text::is_http_url(url) {
-        return None;
-    }
+    let resolved_url = if let Some(u) = &stream.url {
+        let trimmed = u.trim();
+        if crate::tui::text::is_http_url(trimmed) {
+            Some(trimmed.to_string())
+        } else {
+            None
+        }
+    } else if let Some(yt) = &stream.yt_id {
+        Some(format!("https://www.youtube.com/watch?v={}", yt.trim()))
+    } else {
+        None
+    };
+
+    let url = resolved_url?.trim().to_string();
 
     let stream_name_str = stream.name.as_deref().unwrap_or_default();
     let title_str = stream.title.as_deref().unwrap_or_default();
@@ -543,7 +553,7 @@ pub fn stream_item_to_release(
 
     let filename = crate::tui::text::clean_stream_text(&raw_filename);
     let raw_source_label =
-        detect_stream_host(addon_name, stream_name_str, title_str, desc_str, url);
+        detect_stream_host(addon_name, stream_name_str, title_str, desc_str, &url);
     let source_label = crate::tui::text::clean_stream_text(&raw_source_label);
     let language = language.map(|l| crate::tui::text::clean_stream_text(&l));
 

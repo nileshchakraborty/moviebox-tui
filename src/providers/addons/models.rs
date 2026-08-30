@@ -406,12 +406,18 @@ pub struct StreamBehaviorHints {
     pub filename: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct StreamItem {
     pub name: Option<String>,
     pub title: Option<String>,
     pub description: Option<String>,
     pub url: Option<String>,
+    #[serde(rename = "infoHash", default)]
+    pub info_hash: Option<String>,
+    #[serde(rename = "fileIdx", default)]
+    pub file_idx: Option<usize>,
+    #[serde(rename = "ytId", default)]
+    pub yt_id: Option<String>,
     #[serde(rename = "behaviorHints")]
     pub behavior_hints: Option<StreamBehaviorHints>,
 }
@@ -443,6 +449,7 @@ pub struct InstalledAddon {
 
 impl InstalledAddon {
     pub const CINEMETA_MANIFEST: &'static str = "https://v3-cinemeta.strem.io/manifest.json";
+    pub const TORRENTIO_MANIFEST: &'static str = "https://torrentio.strem.fun/manifest.json";
 
     pub fn cinemeta_default() -> Self {
         Self {
@@ -456,6 +463,21 @@ impl InstalledAddon {
             provides_stream: false,
             id_prefixes: vec!["tt".to_string()],
             types: vec!["movie".to_string(), "series".to_string()],
+        }
+    }
+
+    pub fn torrentio_default() -> Self {
+        Self {
+            manifest_url: Self::TORRENTIO_MANIFEST.to_string(),
+            name: "Torrentio".to_string(),
+            version: Some("1.0.14".to_string()),
+            description: Some("Open multi-source torrent & direct stream provider".to_string()),
+            enabled: true,
+            provides_catalog: false,
+            provides_meta: false,
+            provides_stream: true,
+            id_prefixes: vec!["tt".to_string(), "kitsu".to_string()],
+            types: vec!["movie".to_string(), "series".to_string(), "anime".to_string()],
         }
     }
 

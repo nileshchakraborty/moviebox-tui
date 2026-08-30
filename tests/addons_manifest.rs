@@ -241,6 +241,7 @@ fn test_addon_episode_stream_filtering_and_isolation() {
             description: None,
             url: Some("https://cdn.example.com/s01e08_1080p.mp4".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("HdHub\n1080p".to_string()),
@@ -248,6 +249,7 @@ fn test_addon_episode_stream_filtering_and_isolation() {
             description: None,
             url: Some("https://cdn.example.com/s01e06_1080p.mp4".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("HdHub\n720p".to_string()),
@@ -255,6 +257,7 @@ fn test_addon_episode_stream_filtering_and_isolation() {
             description: None,
             url: Some("https://cdn.example.com/s01e08_720p.mp4".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("HdHub\n720p".to_string()),
@@ -262,6 +265,7 @@ fn test_addon_episode_stream_filtering_and_isolation() {
             description: None,
             url: Some("https://cdn.example.com/s01e07_720p.mp4".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
     ];
 
@@ -308,6 +312,7 @@ fn test_addon_movie_stream_resolution_remains_unaffected() {
         description: None,
         url: Some("https://cdn.example.com/inception_1080p.mp4".to_string()),
         behavior_hints: None,
+        ..Default::default()
     };
 
     let release = stream_item_to_release("Cinemeta", &movie_stream, 0, 0)
@@ -338,8 +343,9 @@ fn test_addon_stream_parsing_and_release_mapping() {
             not_web_ready: false,
             headers: Some(headers),
             video_size: Some(1_234_567_890),
-            filename: Some("Breaking.Bad.S01E01.1080p.mkv".to_string()),
+            filename: Some("breakingbad_s01e01.mp4".to_string()),
         }),
+        ..Default::default()
     };
 
     let release = stream_item_to_release("HdHub", &stream, 1, 1).expect("valid release");
@@ -456,6 +462,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: Some("https://example.test/stream1.mp4".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("HTTP 720p Stream".to_string()),
@@ -463,6 +470,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: Some("http://example.test/stream2.mp4".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("Magnet Link".to_string()),
@@ -470,6 +478,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: Some("magnet:?xt=urn:btih:d08244124e9f0863014f56947ab51404ec102770".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("Local File".to_string()),
@@ -477,6 +486,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: Some("file:///etc/passwd".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("FTP Stream".to_string()),
@@ -484,6 +494,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: Some("ftp://example.test/video.mkv".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("Invalid".to_string()),
@@ -491,6 +502,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: Some("not-a-valid-url-string".to_string()),
             behavior_hints: None,
+            ..Default::default()
         },
         StreamItem {
             name: Some("Empty".to_string()),
@@ -498,6 +510,7 @@ fn test_addon_mixed_stream_filtering_and_magnet_rejection() {
             description: None,
             url: None,
             behavior_hints: None,
+            ..Default::default()
         },
     ];
 

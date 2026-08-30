@@ -5,6 +5,12 @@ pub mod title;
 
 pub use title::clean_moviebox_title;
 
+pub fn is_promo_ad_video(url: &str) -> bool {
+    url.contains("1c7de0bd3393702d9191801f15f88f8d")
+        || url.contains("/other/2026/08/11/1c7de0bd")
+        || url.contains("promo_trailer")
+}
+
 use crate::providers::models::ProviderKind;
 use crate::providers::{Provider, ProviderCapabilities};
 
@@ -150,9 +156,21 @@ impl MovieBoxClient {
             .cloned()
             .unwrap_or_default();
 
+        let filtered_items: Vec<Value> = items
+            .into_iter()
+            .filter(|item| {
+                if let Some(link) = item.get("resourceLink").and_then(|l| l.as_str()) {
+                    if is_promo_ad_video(link) {
+                        return false;
+                    }
+                }
+                true
+            })
+            .collect();
+
         let pager = res.get("pager").cloned().unwrap_or_else(|| json!({}));
 
-        Ok((items, pager))
+        Ok((filtered_items, pager))
     }
 
     pub async fn fetch_collection_resolutions(

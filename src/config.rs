@@ -23,15 +23,15 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            auto_update: true,
+            auto_update: false,
             last_update_check: 0,
-            active_mode: "streaming".to_string(),
-            active_provider: ProviderKind::MovieBox,
+            active_mode: "addons".to_string(),
+            active_provider: ProviderKind::Addons,
             active_theme: String::new(),
             bdix_enabled: false,
             streaming_enabled: true,
             tv_enabled: true,
-            addons_enabled: false,
+            addons_enabled: true,
             default_player: None,
             download_dir: None,
         }
@@ -108,9 +108,11 @@ pub fn load_addons() -> Vec<InstalledAddon> {
         .and_then(|content| serde_json::from_str::<Vec<InstalledAddon>>(&content).ok())
         .unwrap_or_default();
 
+    let mut changed = false;
+
     if !list.iter().any(|a| a.is_core()) {
         list.insert(0, InstalledAddon::cinemeta_default());
-        save_addons(&list);
+        changed = true;
     } else {
         for a in &mut list {
             if a.is_core() {
@@ -118,6 +120,19 @@ pub fn load_addons() -> Vec<InstalledAddon> {
             }
         }
     }
+
+    if !list.iter().any(|a| {
+        a.name.eq_ignore_ascii_case("torrentio")
+            || a.manifest_url.to_lowercase().contains("torrentio")
+    }) {
+        list.push(InstalledAddon::torrentio_default());
+        changed = true;
+    }
+
+    if changed {
+        save_addons(&list);
+    }
+
     list
 }
 
